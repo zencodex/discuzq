@@ -1,5 +1,5 @@
 <?php
-$SELF_VERSION = "200930-2";
+$SELF_VERSION = "v1.0.0.1";
 
 set_time_limit(300);
 error_reporting(E_ALL ^ E_WARNING);
@@ -1023,7 +1023,7 @@ function init_dzq()
 	<p>安装日志：</p>
 	<pre class="pre-logs"><?= $logs ?></pre>
 	<p>点击下一步完成安装</p>
-	<form action="<?= get_server_url() ?>" method="get" class="mx-2" id="userform">
+	<form action="<?= htmlspecialchars(get_server_url()); ?>" method="get" class="mx-2" id="userform">
 	</form>
 <?php
 }
@@ -1065,7 +1065,8 @@ function install_database($app, $host, $username, $password, $prefix, $database)
 
 	$pdo = $db->connection('mysql')->getPdo();
 
-	$pdo->query('CREATE DATABASE IF NOT EXISTS ' . $database . ' DEFAULT CHARACTER SET = `utf8mb4` DEFAULT COLLATE = `utf8mb4_unicode_ci`')->execute();
+	$sql = sprintf('CREATE DATABASE IF NOT EXISTS \'%s\' DEFAULT CHARACTER SET = `utf8mb4` DEFAULT COLLATE = `utf8mb4_unicode_ci`', $database);
+	$pdo->query($sql)->execute();
 
 	$app['config']->set(
 		'database.connections',
@@ -1222,7 +1223,7 @@ function upgrade_existing_installation()
 	<p>升级日志：</p>
 	<pre class="pre-logs"><?= $logs ?></pre>
 	<p>点击下一步完成安装</p>
-	<form action="<?= get_server_url() ?>" method="get" class="mx-2" id="userform">
+	<form action="<?= htmlspecialchars(get_server_url()) ?>" method="get" class="mx-2" id="userform">
 	</form>
 	<?php
 }
@@ -1383,13 +1384,13 @@ function do_self_update()
 			}
 		}
 	}
-	return array($need_upgrade, $self_replaced);
+	return array($need_upgrade, $self_replaced, $remote_version);
 }
 
 function check_self_update()
 {
 	global $SCRIPT_NAME;
-	list($need_upgrade, $self_replaced) = do_self_update();
+	list($need_upgrade, $self_replaced, $remote_version) = do_self_update();
 	if ($need_upgrade) {
 	?>
 		<div class="alert alert-primary" role="alert">
@@ -1604,7 +1605,7 @@ function extract_version_from_source()
 	return false;
 }
 
-function get_server_url()
+function get_server_url() 
 {
 	$url = is_https() ? "https://" : "http://";
 	$url .= $_SERVER['HTTP_HOST'];
