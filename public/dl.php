@@ -1,5 +1,5 @@
 <?php
-$SELF_VERSION = "v1.0.0.1";
+$SELF_VERSION = "201029";
 
 set_time_limit(300);
 error_reporting(E_ALL ^ E_WARNING);
@@ -571,6 +571,7 @@ function download_dzq_main()
 		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'static-admin'));
 		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . '_nuxt'));
 		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'pc-pages'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'pc-topic'));
 	}
 
 	$url = PACKAGE_BASE . 'dist/qcloud/discuz/' . $version;
@@ -1064,8 +1065,7 @@ function install_database($app, $host, $username, $password, $prefix, $database)
 	);
 
 	$pdo = $db->connection('mysql')->getPdo();
-
-	$sql = sprintf('CREATE DATABASE IF NOT EXISTS \'%s\' DEFAULT CHARACTER SET = `utf8mb4` DEFAULT COLLATE = `utf8mb4_unicode_ci`', $database);
+	$sql = sprintf('CREATE DATABASE IF NOT EXISTS `%s`  DEFAULT CHARACTER SET = `utf8mb4` DEFAULT COLLATE = `utf8mb4_unicode_ci`', $database);
 	$pdo->query($sql)->execute();
 
 	$app['config']->set(
@@ -1147,6 +1147,7 @@ function update_admin_user($username, $password)
 	$user = App\Models\User::find(1);
 	$user->username = $username;
 	$user->password = $password;
+	$user->created_at = date('Y-m-d H:i:s');
 	$user->save();
 	return "管理员用户创建 ... 完成  \n";
 }
@@ -1605,7 +1606,7 @@ function extract_version_from_source()
 	return false;
 }
 
-function get_server_url() 
+function get_server_url()
 {
 	$url = is_https() ? "https://" : "http://";
 	$url .= $_SERVER['HTTP_HOST'];
