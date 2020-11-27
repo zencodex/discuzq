@@ -1,5 +1,5 @@
 <?php
-$SELF_VERSION = "201029";
+$SELF_VERSION = "v2.1.201117";
 
 set_time_limit(300);
 error_reporting(E_ALL ^ E_WARNING);
@@ -572,6 +572,15 @@ function download_dzq_main()
 		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . '_nuxt'));
 		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'pc-pages'));
 		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'pc-topic'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'invite'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'manage'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'modify'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'my'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'site'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'thread'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'topic'));
+		remove_dir(realpath(__DIR__ . DIRECTORY_SEPARATOR . 'user'));
+		
 	}
 
 	$url = PACKAGE_BASE . 'dist/qcloud/discuz/' . $version;
@@ -1294,6 +1303,8 @@ function apply_version_upgrade_migration($params)
 	}
 	return $logs;
 }
+
+
 
 function check_and_strip_upgrade_md5($str)
 {
